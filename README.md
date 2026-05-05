@@ -47,28 +47,55 @@ You can create more users from the **User Management** page when logged in as HR
 
 ## Permission matrix (assignment Section 4)
 
-| Action                              | Employee | Manager | HR | Permission |
-|-------------------------------------|:-:|:-:|:-:|---|
-| View own attendance                 | ✓ | ✓ | ✓ | `attendance:read:own` |
-| Check in / Check out                | ✓ | ✓ | ✗ | `attendance:write` |
-| Apply for leave                     | ✓ | ✓ | ✗ | `leave:apply` |
-| View own leave requests             | ✓ | ✓ | ✓ | `leave:read:own` |
-| Cancel own pending leave            | ✓ | ✓ | ✗ | `leave:cancel:own` |
-| View team attendance                | ✗ | ✓ | ✓ | `attendance:read:team` |
-| Approve / Reject leave              | ✗ | ✓ | ✓¹ | `leave:approve` |
-| View pending approval queue         | ✗ | ✓ | ✓ | `leave:read:pending` |
-| View all leave requests             | ✗ | ✗ | ✓ | `leave:read:all` |
-| Create / Deactivate users + assign  | ✗ | ✗ | ✓ | `user:manage` |
-| Configure leave types               | ✗ | ✗ | ✓ | `leave_type:manage` |
-| View organization attendance        | ✗ | ✗ | ✓ | `attendance:read:all` |
+Reproduced verbatim from the spec:
 
-¹ HR's `leave:approve` only resolves to Manager leaves in practice, because
-the parent-role rule routes Manager → HR via `parent_id`.
+| Action                       | Employee | Manager | HR |
+|------------------------------|:-:|:-:|:-:|
+| View own attendance          | ✓ | ✓ | ✓ |
+| Check in / Check out         | ✓ | ✓ | ✗ |
+| Apply for leave              | ✓ | ✓ | ✗ |
+| View own leave requests      | ✓ | ✓ | ✓ |
+| View team attendance         | ✗ | ✓ | ✓ |
+| Approve / Reject leave       | ✗ | ✓ | ✗ |
+| View all leave requests      | ✗ | ✗ | ✓ |
+| Create / Deactivate users    | ✗ | ✗ | ✓ |
+| Assign roles & managers      | ✗ | ✗ | ✓ |
+| Configure leave types        | ✗ | ✗ | ✓ |
+| View organization attendance | ✗ | ✗ | ✓ |
 
-The matrix is data, not code. Roles, permissions, and the role↔permission
-mapping live in the `roles`, `permissions`, and `role_permissions` tables
-(seeded by `20260504000000-seed-roles-and-permissions.js`). All authorization
-is permission-based:
+### Implementation: how each spec row maps to a permission
+
+| Spec row | Permission | Granted to |
+|---|---|---|
+| View own attendance | `attendance:read:own` | E, M, HR |
+| Check in / Check out | `attendance:write` | E, M |
+| Apply for leave | `leave:apply` | E, M |
+| View own leave requests | `leave:read:own` | E, M, HR |
+| View team attendance | `attendance:read:team` | M, HR |
+| Approve / Reject leave | `leave:approve` | M (+ HR for Manager leaves only — see §6 note) |
+| View all leave requests | `leave:read:all` | HR |
+| Create / Deactivate users + Assign roles & managers | `user:manage` | HR |
+| Configure leave types | `leave_type:manage` | HR |
+| View organization attendance | `attendance:read:all` | HR |
+
+Two additional internal permissions back spec mechanics that aren't
+standalone matrix rows:
+
+| Internal permission | Granted to | Why it exists |
+|---|---|---|
+| `leave:cancel:own` | E, M | Backs the §6 maker-checker rule (cancel allowed only while pending) |
+| `leave:read:pending` | M, HR | Drives the Leave Approval page's pending queue |
+
+**§6 carve-out (Manager's own leave is handled by HR).** The matrix above
+shows HR ✗ for Approve/Reject — that's the *default* path. Section 6
+states "A manager cannot approve or reject their own leave requests. Their
+requests follow the same workflow and must be handled by HR or a designated
+authority." To honor this, HR also holds `leave:approve`, but the
+row-level CASL rule `requester.parentId === actor.id` plus the parent-role
+typing (Manager.parent = HR) restricts HR's reach to Manager leaves only.
+HR cannot approve an Employee's leave.
+
+### How authorization is wired
 
 - Routes use `requirePermission('...')` for action gates.
 - CASL builds `can(...)` rules from the user's permission array, then layers
