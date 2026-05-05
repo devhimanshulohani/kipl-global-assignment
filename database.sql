@@ -444,6 +444,7 @@ INSERT INTO public.sessions VALUES ('c0fc36a5-7b88-4099-b634-4ee86f351796', 1, '
 INSERT INTO public.sessions VALUES ('ed28362e-a7d1-40f3-935b-cb6bee18b0cd', 1, '2026-05-05 11:19:36.987+00', '2026-05-05 11:19:25.708+00', '2026-05-05 11:19:36.987+00');
 INSERT INTO public.sessions VALUES ('3a500cc4-0079-4c69-8bd0-5a6462534e17', 1, '2026-05-05 11:26:53.725+00', '2026-05-05 11:25:48.753+00', '2026-05-05 11:26:53.725+00');
 INSERT INTO public.sessions VALUES ('6541d924-61a1-46ba-81a0-2e5079a63410', 1, '2026-05-05 11:42:39.468+00', '2026-05-05 11:40:21.223+00', '2026-05-05 11:42:39.468+00');
+INSERT INTO public.sessions VALUES ('200e3be8-ecfb-469b-8cf3-f24d8cb61c34', 1, '2026-05-05 11:46:02.23+00', '2026-05-05 11:45:32.983+00', '2026-05-05 11:46:02.231+00');
 
 
 --
@@ -453,6 +454,7 @@ INSERT INTO public.sessions VALUES ('6541d924-61a1-46ba-81a0-2e5079a63410', 1, '
 INSERT INTO public.users VALUES (1, 'hr1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 3, NULL, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
 INSERT INTO public.users VALUES (2, 'manager1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 2, 1, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
 INSERT INTO public.users VALUES (3, 'employee1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 1, 2, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
+INSERT INTO public.users VALUES (7, 'Test', '$2b$10$gMLY/f2e1jFU/cs36sLRoe.bA5jh3XA4mdfLQmbPNx9PDzbMSatJK', 1, 2, true, '2026-05-05 11:46:02.217+00', '2026-05-05 11:46:02.217+00');
 
 
 --
@@ -494,7 +496,7 @@ SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: app_user
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 6, true);
+SELECT pg_catalog.setval('public.users_id_seq', 7, true);
 
 
 --

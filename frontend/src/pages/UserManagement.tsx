@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Loader2, Pencil, Plus } from 'lucide-react';
+import { Eye, EyeOff, Loader2, Pencil, Plus, UserX } from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -29,6 +29,16 @@ import {
   DialogHeader,
   DialogTitle,
 } from '@/components/ui/dialog';
+import {
+  AlertDialog,
+  AlertDialogAction,
+  AlertDialogCancel,
+  AlertDialogContent,
+  AlertDialogDescription,
+  AlertDialogFooter,
+  AlertDialogHeader,
+  AlertDialogTitle,
+} from '@/components/ui/alert-dialog';
 import { UserRole, userRoleLabel } from '../enums/UserRole';
 import {
   useCreateUserMutation,
@@ -75,6 +85,23 @@ export function UserManagementPage() {
   const [editRole, setEditRole] = useState<UserRole>(UserRole.Employee);
   const [editParentId, setEditParentId] = useState<string>('');
   const [editActive, setEditActive] = useState(true);
+
+  const [deactivating, setDeactivating] = useState<UserRow | null>(null);
+
+  const onDeactivate = async () => {
+    if (!deactivating) return;
+    if (
+      await runMutation(
+        updateUser({ id: deactivating.id, isActive: false }),
+        {
+          success: `${deactivating.username} deactivated`,
+          error: 'Deactivate failed',
+        }
+      )
+    ) {
+      setDeactivating(null);
+    }
+  };
 
   // Restrict parent dropdown to valid roles (server-validated in users.service.validateParent).
   const parentRoleFor = (childRole: UserRole): UserRole | null => {
@@ -228,6 +255,16 @@ export function UserManagementPage() {
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
+                  {u.isActive && (
+                    <Button
+                      variant="ghost"
+                      size="icon"
+                      onClick={() => setDeactivating(u)}
+                      title="Deactivate"
+                    >
+                      <UserX className="h-4 w-4 text-destructive" />
+                    </Button>
+                  )}
                 </TableCell>
               </TableRow>
             ))}
@@ -434,6 +471,41 @@ export function UserManagementPage() {
           </DialogFooter>
         </DialogContent>
       </Dialog>
+
+      <AlertDialog
+        open={!!deactivating}
+        onOpenChange={(o) => {
+          if (!o) setDeactivating(null);
+        }}
+      >
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>
+              Deactivate {deactivating?.username}?
+            </AlertDialogTitle>
+            <AlertDialogDescription>
+              They won't be able to log in. You can reactivate them later
+              from the Edit dialog.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel onClick={() => setDeactivating(null)}>
+              Cancel
+            </AlertDialogCancel>
+            <AlertDialogAction
+              onClick={onDeactivate}
+              disabled={submitting}
+              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+            >
+              {submitting ? (
+                <Loader2 className="h-4 w-4 animate-spin" />
+              ) : (
+                'Deactivate'
+              )}
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
     </div>
   );
 }
