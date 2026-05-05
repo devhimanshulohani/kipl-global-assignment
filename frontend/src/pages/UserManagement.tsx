@@ -93,7 +93,7 @@ export function UserManagementPage() {
 
   const openCreate = () => {
     setNewUsername('');
-    setNewPassword('');
+    setNewPassword('password123');
     setNewRole(UserRole.Employee);
     setNewParentId('');
     setCreateOpen(true);
@@ -284,7 +284,7 @@ export function UserManagementPage() {
                 </SelectContent>
               </Select>
             </div>
-            {newRole === UserRole.Employee ? (
+            {newRole === UserRole.Employee && (
               <div className="space-y-2">
                 <Label>Reporting manager</Label>
                 <Select value={newParentId} onValueChange={setNewParentId}>
@@ -299,14 +299,6 @@ export function UserManagementPage() {
                     ))}
                   </SelectContent>
                 </Select>
-              </div>
-            ) : (
-              <div className="space-y-2">
-                <Label>Reporting HR</Label>
-                <p className="text-sm text-muted-foreground rounded-md border bg-muted/30 px-3 py-2">
-                  {currentUser?.username ?? '—'}{' '}
-                  <span className="text-xs">(you)</span>
-                </p>
               </div>
             )}
           </div>
