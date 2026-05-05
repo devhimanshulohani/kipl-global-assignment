@@ -18,7 +18,14 @@ import { useAuth } from '../auth/AuthContext';
 import { userRoleLabel } from '../enums/UserRole';
 import type { Actions, Subjects } from '../auth/abilities';
 import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuLabel,
+  DropdownMenuSeparator,
+  DropdownMenuTrigger,
+} from '@/components/ui/dropdown-menu';
 import { cn } from '@/lib/utils';
 
 interface NavItem {
@@ -118,27 +125,32 @@ export function Layout() {
             </h1>
           </div>
 
-          <div className="flex items-center gap-3 shrink-0">
-            <Badge variant="secondary" className="hidden sm:inline-flex">
-              {userRoleLabel(user.role.name)}
-            </Badge>
-            <div className="flex items-center gap-2.5">
-              <div className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold">
+          <div className="flex items-center shrink-0">
+            <DropdownMenu>
+              <DropdownMenuTrigger
+                aria-label="Account menu"
+                className="h-8 w-8 rounded-full bg-primary text-primary-foreground flex items-center justify-center text-xs font-semibold cursor-pointer outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2"
+              >
                 {initial}
-              </div>
-              <span className="text-sm font-medium hidden sm:inline">
-                {user.username}
-              </span>
-            </div>
-            <Button
-              variant="ghost"
-              size="icon"
-              onClick={logout}
-              title="Logout"
-              aria-label="Logout"
-            >
-              <LogOut className="h-4 w-4" />
-            </Button>
+              </DropdownMenuTrigger>
+              <DropdownMenuContent align="end" className="min-w-[12rem]">
+                <DropdownMenuLabel className="font-normal">
+                  <div className="flex flex-col">
+                    <span className="text-sm font-medium">
+                      {userRoleLabel(user.role.name)}
+                    </span>
+                    <span className="text-xs text-muted-foreground">
+                      {user.username}
+                    </span>
+                  </div>
+                </DropdownMenuLabel>
+                <DropdownMenuSeparator />
+                <DropdownMenuItem onSelect={() => logout()}>
+                  <LogOut className="h-4 w-4" />
+                  <span>Logout</span>
+                </DropdownMenuItem>
+              </DropdownMenuContent>
+            </DropdownMenu>
           </div>
         </div>
       </header>
