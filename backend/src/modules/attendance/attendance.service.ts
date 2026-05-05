@@ -1,5 +1,6 @@
 import { Attendance } from '../../models/Attendance';
 import { User } from '../../models/User';
+import { Role } from '../../models/Role';
 import { HttpError } from '../../utils/http-error';
 
 const todayDate = (): string => new Date().toISOString().slice(0, 10);
@@ -60,7 +61,12 @@ export const listTeam = async (actorId: number) => {
 export const listAll = async () => {
   return Attendance.findAll({
     include: [
-      { model: User, as: 'user', attributes: ['id', 'username', 'role'] },
+      {
+        model: User,
+        as: 'user',
+        attributes: ['id', 'username'],
+        include: [{ model: Role, as: 'role', attributes: ['name'] }],
+      },
     ],
     order: [['date', 'DESC']],
   });
