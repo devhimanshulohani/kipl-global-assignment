@@ -29,14 +29,25 @@ const getRoleIdByName = async (name: UserRole): Promise<number> => {
 };
 
 // Parent-role rule: employee→manager, manager→hr, hr→null, no self.
+// Employee and Manager MUST have a parent; HR must NOT.
 const validateParent = async (
   childId: number | null,
   childRoleName: UserRole,
   parentId: number | null | undefined
 ) => {
-  if (parentId == null) return;
   if (childRoleName === UserRole.HR) {
-    throw new HttpError(400, 'HR users cannot have a parent');
+    if (parentId != null) {
+      throw new HttpError(400, 'HR users cannot have a parent');
+    }
+    return;
+  }
+  if (parentId == null) {
+    const required =
+      childRoleName === UserRole.Employee ? 'a manager' : 'an HR';
+    throw new HttpError(
+      400,
+      `${childRoleName} requires ${required} as parent`
+    );
   }
   if (childId !== null && parentId === childId) {
     throw new HttpError(400, 'A user cannot be their own parent');

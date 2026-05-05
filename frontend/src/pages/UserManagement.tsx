@@ -81,10 +81,6 @@ export function UserManagementPage() {
     if (childRole === UserRole.Manager) return UserRole.HR;
     return null;
   };
-  const parentLabelFor = (childRole: UserRole) => {
-    const r = parentRoleFor(childRole);
-    return r === UserRole.HR ? 'Reporting HR' : 'Reporting manager';
-  };
   const parentOptionsFor = (childRole: UserRole, excludeId?: number) => {
     const r = parentRoleFor(childRole);
     if (r === null) return [];
@@ -104,13 +100,20 @@ export function UserManagementPage() {
   };
 
   const onCreate = async () => {
+    // Manager auto-reports to the HR creating them; only Employee picks a parent.
+    const parentId =
+      newRole === UserRole.Manager
+        ? (currentUser?.id ?? null)
+        : newParentId
+          ? Number(newParentId)
+          : null;
     if (
       await runMutation(
         createUser({
           username: newUsername,
           password: newPassword,
           role: newRole,
-          parentId: newParentId ? Number(newParentId) : null,
+          parentId,
         }),
         { success: 'User created', error: 'Create failed' }
       )
@@ -128,12 +131,22 @@ export function UserManagementPage() {
 
   const onSave = async () => {
     if (!editing) return;
+    // Same rule as create: Manager parent is the HR doing the editing,
+    // Employee picks one, HR has none.
+    const parentId =
+      editRole === UserRole.Manager
+        ? (currentUser?.id ?? null)
+        : editRole === UserRole.HR
+          ? null
+          : editParentId
+            ? Number(editParentId)
+            : null;
     if (
       await runMutation(
         updateUser({
           id: editing.id,
           role: editRole,
-          parentId: editParentId ? Number(editParentId) : null,
+          parentId,
           isActive: editActive,
         }),
         { success: 'User updated', error: 'Update failed' }
@@ -271,21 +284,31 @@ export function UserManagementPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>{parentLabelFor(newRole)}</Label>
-              <Select value={newParentId} onValueChange={setNewParentId}>
-                <SelectTrigger>
-                  <SelectValue placeholder="None" />
-                </SelectTrigger>
-                <SelectContent>
-                  {parentOptionsFor(newRole).map((p) => (
-                    <SelectItem key={p.id} value={String(p.id)}>
-                      {p.username}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {newRole === UserRole.Employee ? (
+              <div className="space-y-2">
+                <Label>Reporting manager</Label>
+                <Select value={newParentId} onValueChange={setNewParentId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="None" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {parentOptionsFor(newRole).map((p) => (
+                      <SelectItem key={p.id} value={String(p.id)}>
+                        {p.username}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            ) : (
+              <div className="space-y-2">
+                <Label>Reporting HR</Label>
+                <p className="text-sm text-muted-foreground rounded-md border bg-muted/30 px-3 py-2">
+                  {currentUser?.username ?? '—'}{' '}
+                  <span className="text-xs">(you)</span>
+                </p>
+              </div>
+            )}
           </div>
           <DialogFooter>
             <Button variant="outline" onClick={() => setCreateOpen(false)}>
@@ -345,29 +368,32 @@ export function UserManagementPage() {
                 </SelectContent>
               </Select>
             </div>
-            <div className="space-y-2">
-              <Label>{parentLabelFor(editRole)}</Label>
-              <Select
-                value={editParentId}
-                onValueChange={setEditParentId}
-                disabled={editRole === UserRole.HR}
-              >
-                <SelectTrigger>
-                  <SelectValue
-                    placeholder={
-                      editRole === UserRole.HR ? 'N/A (HR has no parent)' : 'None'
-                    }
-                  />
-                </SelectTrigger>
-                <SelectContent>
-                  {parentOptionsFor(editRole, editing?.id).map((p) => (
-                    <SelectItem key={p.id} value={String(p.id)}>
-                      {p.username}
-                    </SelectItem>
-                  ))}
-                </SelectContent>
-              </Select>
-            </div>
+            {editRole === UserRole.Employee && (
+              <div className="space-y-2">
+                <Label>Reporting manager</Label>
+                <Select value={editParentId} onValueChange={setEditParentId}>
+                  <SelectTrigger>
+                    <SelectValue placeholder="None" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {parentOptionsFor(editRole, editing?.id).map((p) => (
+                      <SelectItem key={p.id} value={String(p.id)}>
+                        {p.username}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              </div>
+            )}
+            {editRole === UserRole.Manager && (
+              <div className="space-y-2">
+                <Label>Reporting HR</Label>
+                <p className="text-sm text-muted-foreground rounded-md border bg-muted/30 px-3 py-2">
+                  {currentUser?.username ?? '—'}{' '}
+                  <span className="text-xs">(you, on save)</span>
+                </p>
+              </div>
+            )}
             <div className="flex items-center gap-3">
               <Switch
                 checked={editActive}

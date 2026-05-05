@@ -442,6 +442,7 @@ INSERT INTO public.roles VALUES (3, 'hr', '2026-05-05 11:08:45.598+00', '2026-05
 INSERT INTO public.sessions VALUES ('0cb4a55c-1d4d-46db-b9ce-16389e731e3f', 1, '2026-05-05 11:10:29.143+00', '2026-05-05 11:10:29.113+00', '2026-05-05 11:10:29.143+00');
 INSERT INTO public.sessions VALUES ('c0fc36a5-7b88-4099-b634-4ee86f351796', 1, '2026-05-05 11:15:30.194+00', '2026-05-05 11:08:56.718+00', '2026-05-05 11:15:30.194+00');
 INSERT INTO public.sessions VALUES ('ed28362e-a7d1-40f3-935b-cb6bee18b0cd', 1, '2026-05-05 11:19:36.987+00', '2026-05-05 11:19:25.708+00', '2026-05-05 11:19:36.987+00');
+INSERT INTO public.sessions VALUES ('3a500cc4-0079-4c69-8bd0-5a6462534e17', 1, '2026-05-05 11:26:53.725+00', '2026-05-05 11:25:48.753+00', '2026-05-05 11:26:53.725+00');
 
 
 --
@@ -492,7 +493,7 @@ SELECT pg_catalog.setval('public.roles_id_seq', 3, true);
 -- Name: users_id_seq; Type: SEQUENCE SET; Schema: public; Owner: app_user
 --
 
-SELECT pg_catalog.setval('public.users_id_seq', 3, true);
+SELECT pg_catalog.setval('public.users_id_seq', 6, true);
 
 
 --
