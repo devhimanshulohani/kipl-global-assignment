@@ -1,4 +1,5 @@
 import bcrypt from 'bcrypt';
+import { Op } from 'sequelize';
 import { User } from '../../models/User';
 import { Role } from '../../models/Role';
 import { HttpError } from '../../utils/http-error';
@@ -6,9 +7,10 @@ import { SALT_ROUNDS } from '../../constants/auth';
 import { UserRole } from '../../enums/UserRole';
 import type { CreateUserInput, UpdateUserInput } from './users.validation';
 
-export const list = async () => {
+export const list = async (excludeUserId?: number) => {
   // defaultScope on User excludes passwordHash automatically
   return User.findAll({
+    where: excludeUserId != null ? { id: { [Op.ne]: excludeUserId } } : undefined,
     order: [['id', 'ASC']],
     include: [{ model: Role, as: 'role', attributes: ['id', 'name'] }],
   });

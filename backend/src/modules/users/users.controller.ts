@@ -1,8 +1,8 @@
 import { Request, Response } from 'express';
 import * as usersService from './users.service';
 
-export const list = async (_req: Request, res: Response) => {
-  res.json(await usersService.list());
+export const list = async (req: Request, res: Response) => {
+  res.json(await usersService.list(req.user!.id));
 };
 
 export const create = async (req: Request, res: Response) => {

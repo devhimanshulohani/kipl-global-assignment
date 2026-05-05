@@ -375,84 +375,82 @@ INSERT INTO public."SequelizeMeta" VALUES ('20260504000005-create-sessions.js');
 -- Data for Name: leave_types; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.leave_types VALUES (1, 'Casual Leave', 12, '2026-05-05 09:33:40.066+00', '2026-05-05 09:33:40.066+00');
-INSERT INTO public.leave_types VALUES (2, 'Sick Leave', 10, '2026-05-05 09:33:40.066+00', '2026-05-05 09:33:40.066+00');
-INSERT INTO public.leave_types VALUES (3, 'Earned Leave', 15, '2026-05-05 09:33:40.066+00', '2026-05-05 09:33:40.066+00');
+INSERT INTO public.leave_types VALUES (1, 'Casual Leave', 12, '2026-05-05 11:08:45.612+00', '2026-05-05 11:08:45.612+00');
+INSERT INTO public.leave_types VALUES (2, 'Sick Leave', 10, '2026-05-05 11:08:45.612+00', '2026-05-05 11:08:45.612+00');
+INSERT INTO public.leave_types VALUES (3, 'Earned Leave', 15, '2026-05-05 11:08:45.612+00', '2026-05-05 11:08:45.612+00');
 
 
 --
 -- Data for Name: permissions; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.permissions VALUES (1, 'attendance:read:own', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (2, 'attendance:write', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (3, 'attendance:read:team', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (4, 'attendance:read:all', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (5, 'leave:apply', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (6, 'leave:read:own', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (7, 'leave:cancel:own', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (8, 'leave:read:pending', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (9, 'leave:read:all', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (10, 'leave:approve', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (11, 'leave_type:manage', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.permissions VALUES (12, 'user:manage', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
+INSERT INTO public.permissions VALUES (1, 'attendance:read:own', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (2, 'attendance:write', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (3, 'attendance:read:team', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (4, 'attendance:read:all', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (5, 'leave:apply', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (6, 'leave:read:own', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (7, 'leave:cancel:own', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (8, 'leave:read:pending', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (9, 'leave:read:all', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (10, 'leave:approve', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (11, 'leave_type:manage', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.permissions VALUES (12, 'user:manage', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
 
 
 --
 -- Data for Name: role_permissions; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.role_permissions VALUES (1, 1, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (1, 2, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (1, 5, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (1, 6, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (1, 7, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 1, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 2, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 3, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 5, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 6, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 7, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 8, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (2, 10, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 1, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 3, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 4, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 6, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 8, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 9, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 10, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 11, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.role_permissions VALUES (3, 12, '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
+INSERT INTO public.role_permissions VALUES (1, 1, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (1, 2, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (1, 5, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (1, 6, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (1, 7, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 1, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 2, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 3, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 5, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 6, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 7, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 8, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (2, 10, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 1, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 3, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 4, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 6, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 8, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 9, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 10, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 11, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.role_permissions VALUES (3, 12, '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
 
 
 --
 -- Data for Name: roles; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.roles VALUES (1, 'employee', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.roles VALUES (2, 'manager', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
-INSERT INTO public.roles VALUES (3, 'hr', '2026-05-05 09:33:40.055+00', '2026-05-05 09:33:40.055+00');
+INSERT INTO public.roles VALUES (1, 'employee', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.roles VALUES (2, 'manager', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
+INSERT INTO public.roles VALUES (3, 'hr', '2026-05-05 11:08:45.598+00', '2026-05-05 11:08:45.598+00');
 
 
 --
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.sessions VALUES ('01eaf5df-cb04-4a45-9b6c-aff8a6ab03d0', 2, '2026-05-05 10:12:18.265+00', '2026-05-05 10:12:18.205+00', '2026-05-05 10:12:18.265+00');
-INSERT INTO public.sessions VALUES ('6f27c605-f49e-4633-b2bc-abbe9ed900b3', 2, '2026-05-05 10:27:06.729+00', '2026-05-05 10:27:06.704+00', '2026-05-05 10:27:06.729+00');
-INSERT INTO public.sessions VALUES ('94f31e50-1b71-438f-a3f7-0f4985d26d12', 2, '2026-05-05 10:30:41.539+00', '2026-05-05 10:30:41.511+00', '2026-05-05 10:30:41.539+00');
-INSERT INTO public.sessions VALUES ('4c24619c-56d8-44ae-8c97-34217538d6ac', 1, '2026-05-05 10:49:05.361+00', '2026-05-05 10:37:05.151+00', '2026-05-05 10:49:05.361+00');
-INSERT INTO public.sessions VALUES ('0beb2dec-ea3f-45f2-8b2d-1bd622582208', 1, '2026-05-05 10:53:12.891+00', '2026-05-05 10:50:16.272+00', '2026-05-05 10:53:12.892+00');
+INSERT INTO public.sessions VALUES ('0cb4a55c-1d4d-46db-b9ce-16389e731e3f', 1, '2026-05-05 11:10:29.143+00', '2026-05-05 11:10:29.113+00', '2026-05-05 11:10:29.143+00');
+INSERT INTO public.sessions VALUES ('c0fc36a5-7b88-4099-b634-4ee86f351796', 1, '2026-05-05 11:15:30.194+00', '2026-05-05 11:08:56.718+00', '2026-05-05 11:15:30.194+00');
+INSERT INTO public.sessions VALUES ('ed28362e-a7d1-40f3-935b-cb6bee18b0cd', 1, '2026-05-05 11:19:36.987+00', '2026-05-05 11:19:25.708+00', '2026-05-05 11:19:36.987+00');
 
 
 --
 -- Data for Name: users; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
-INSERT INTO public.users VALUES (1, 'hr1', '$2b$10$wvgjzrewpWkuspAwz2cFB.ssrHGp.jyasWkJfXRbEP3IiJah9Ca26', 3, NULL, true, '2026-05-05 09:33:40.069+00', '2026-05-05 09:33:40.069+00');
-INSERT INTO public.users VALUES (2, 'manager1', '$2b$10$wvgjzrewpWkuspAwz2cFB.ssrHGp.jyasWkJfXRbEP3IiJah9Ca26', 2, 1, true, '2026-05-05 09:33:40.069+00', '2026-05-05 09:33:40.069+00');
-INSERT INTO public.users VALUES (3, 'employee1', '$2b$10$wvgjzrewpWkuspAwz2cFB.ssrHGp.jyasWkJfXRbEP3IiJah9Ca26', 1, 2, true, '2026-05-05 09:33:40.069+00', '2026-05-05 09:33:40.069+00');
+INSERT INTO public.users VALUES (1, 'hr1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 3, NULL, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
+INSERT INTO public.users VALUES (2, 'manager1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 2, 1, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
+INSERT INTO public.users VALUES (3, 'employee1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 1, 2, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
 
 
 --

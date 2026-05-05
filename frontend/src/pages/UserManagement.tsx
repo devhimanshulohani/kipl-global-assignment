@@ -37,9 +37,29 @@ import {
 } from '../store/users.api';
 import type { UserRow } from '../store/users.api';
 import { runMutation } from '../lib/runMutation';
+import { useAuth } from '../auth/AuthContext';
 
 export function UserManagementPage() {
+  const { user: currentUser } = useAuth();
   const { data: users = [], isLoading, error } = useListUsersQuery();
+
+  // Backend strips the caller from /api/users so they don't appear in the
+  // table. For the parent dropdown + "Reports to" lookup we still need
+  // them as an assignable parent, so re-merge here.
+  const allUsers: UserRow[] = currentUser
+    ? [
+        {
+          id: currentUser.id,
+          username: currentUser.username,
+          role: currentUser.role,
+          parentId: null,
+          isActive: true,
+          createdAt: '',
+          updatedAt: '',
+        },
+        ...users,
+      ]
+    : users;
   const [createUser, { isLoading: creating }] = useCreateUserMutation();
   const [updateUser, { isLoading: updating }] = useUpdateUserMutation();
   const submitting = creating || updating;
@@ -68,12 +88,12 @@ export function UserManagementPage() {
   const parentOptionsFor = (childRole: UserRole, excludeId?: number) => {
     const r = parentRoleFor(childRole);
     if (r === null) return [];
-    return users.filter(
+    return allUsers.filter(
       (u) => u.role.name === r && u.isActive && u.id !== excludeId
     );
   };
   const findUser = (id: number | null) =>
-    id == null ? undefined : users.find((u) => u.id === id);
+    id == null ? undefined : allUsers.find((u) => u.id === id);
 
   const openCreate = () => {
     setNewUsername('');
