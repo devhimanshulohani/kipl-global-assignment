@@ -319,7 +319,8 @@ export function UserManagementPage() {
               disabled={
                 submitting ||
                 !newUsername.trim() ||
-                newPassword.length < 8
+                newPassword.length < 8 ||
+                (newRole === UserRole.Employee && !newParentId)
               }
             >
               {submitting ? (
@@ -409,7 +410,13 @@ export function UserManagementPage() {
             <Button variant="outline" onClick={() => setEditing(null)}>
               Cancel
             </Button>
-            <Button onClick={onSave} disabled={submitting}>
+            <Button
+              onClick={onSave}
+              disabled={
+                submitting ||
+                (editRole === UserRole.Employee && !editParentId)
+              }
+            >
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
               ) : (
