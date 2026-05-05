@@ -22,9 +22,12 @@ the leave-approval workflow across three roles (Employee, Manager, HR).
 
 ## Quickstart
 
-From the project root:
+From the project root, on a fresh clone:
 
 ```bash
+cp backend/.env.example  backend/.env
+cp frontend/.env.example frontend/.env
+
 make db-reset       # one-shot: wipes volumes, builds images, migrates, seeds
 make up             # start everything in watch mode
 ```
@@ -176,8 +179,9 @@ my-app/
         ├── enums/              # mirrors backend (UserRole, LeaveStatus)
         ├── types/api.ts        # response shapes (AuthUser, Role, ...)
         ├── lib/
-        │   ├── api.ts          # axios instance + 401 interceptor
         │   ├── dates.ts        # formatting helpers
+        │   ├── runMutation.ts  # RTK Query trigger wrapper (toast + boolean)
+        │   ├── sessionFlash.ts # constant key for the login flash channel
         │   └── utils.ts        # cn() — tailwind className helper
         ├── auth/
         │   ├── abilities.ts        # CASL mirror — same rules as backend
@@ -186,7 +190,7 @@ my-app/
         │   ├── RequireAuth.tsx     # route guard (any authenticated)
         │   └── RequirePermission.tsx  # route guard (specific permission)
         ├── store/              # Redux Toolkit + RTK Query API slices
-        │   ├── api.ts          # base RTK Query (axiosBaseQuery)
+        │   ├── api.ts          # fetchBaseQuery + 401 → flash + redirect wrapper
         │   ├── auth.api.ts, attendance.api.ts, leaves.api.ts,
         │   │   users.api.ts, leaveTypes.api.ts
         │   ├── hooks.ts, index.ts
@@ -244,7 +248,11 @@ GET    /health                      → {status:"ok"}
 
 ## Environment variables
 
-`backend/.env` — required. The Zod schema in `src/config/env.ts` validates these at boot and exits with a clear error if any are missing/invalid.
+Both `.env` files are gitignored. Templates are committed as `.env.example`
+on each side — copy them once before the first run (see Quickstart).
+
+`backend/.env` — required. The Zod schema in `src/config/env.ts` validates
+these at boot and exits with a clear error if any are missing/invalid.
 
 ```
 POSTGRES_USER=app_user
@@ -253,6 +261,7 @@ POSTGRES_DB=app_db
 DATABASE_URL=postgres://app_user:app_password@postgres:5432/app_db
 PORT=3000
 NODE_ENV=development
+CORS_ORIGIN=http://localhost:5173
 ```
 
 `frontend/.env`:
@@ -265,15 +274,15 @@ VITE_API_URL=http://localhost:3000
 
 - Login (`POST /api/auth/login`) creates a server-side session row keyed by an
   opaque UUID. The token is delivered as an **httpOnly cookie** (`Secure` in
-  prod, `SameSite=Lax`); the frontend never touches it directly. All subsequent
-  requests use `withCredentials: true` so the cookie is sent automatically.
+  prod, `SameSite=Lax`); the frontend never touches it directly. RTK Query
+  uses `credentials: 'include'` so the cookie is sent automatically.
 - Every authenticated request looks up the session, rejects it if
   `now() - last_activity_at > 15 min`, otherwise updates `last_activity_at`.
   This is a true **sliding inactivity** expiry, per spec Section 3.4.
 - Logout (`POST /api/auth/logout`) deletes the session row and clears the cookie.
-- The frontend's axios interceptor catches any 401, stashes a "Session expired"
-  flash message in `sessionStorage`, and redirects to `/login` where the message
-  is shown.
+- The frontend's RTK Query baseQuery wrapper (`store/api.ts`) catches any 401,
+  stashes a "Session expired" flash message in `sessionStorage`, and redirects
+  to `/login` where the Login page reads and displays it.
 - The `/api/auth/login` endpoint is rate-limited to **10 attempts per 15 min per IP**
   (returns 429 with the standard IETF `RateLimit-*` headers).
 
