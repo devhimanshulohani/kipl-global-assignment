@@ -1,8 +1,12 @@
 import { useState } from 'react';
 import { Check, ClipboardCheck, Loader2, X } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Badge } from '@/components/ui/badge';
+import { Tabs, TabsList, TabsTrigger } from '@/components/ui/tabs';
+import { Page } from '../components/Page';
+import { Loading } from '../components/Loading';
+import { EmptyState } from '../components/EmptyState';
 import {
   Table,
   TableBody,
@@ -25,22 +29,49 @@ import { Textarea } from '@/components/ui/textarea';
 import { Label } from '@/components/ui/label';
 import { useAuth } from '../auth/AuthContext';
 import { UserRole, userRoleLabel } from '../enums/UserRole';
+import { LeaveStatus, leaveStatusLabel } from '../enums/LeaveStatus';
 import type { LeaveRequest } from '../types/api';
 import {
   useApproveLeaveMutation,
+  useListAllLeavesQuery,
   useListPendingLeavesQuery,
+  useListTeamLeavesQuery,
   useRejectLeaveMutation,
 } from '../store/leaves.api';
 import { runMutation } from '../lib/runMutation';
 
 type Action = 'approve' | 'reject';
+type Tab = 'pending' | 'all';
+
+const statusVariant = (
+  s: LeaveStatus
+): 'default' | 'destructive' | 'outline' =>
+  s === LeaveStatus.Approved
+    ? 'default'
+    : s === LeaveStatus.Rejected
+      ? 'destructive'
+      : 'outline';
 
 export function LeaveApprovalPage() {
   const { user } = useAuth();
   const isHR = user?.role.name === UserRole.HR;
+  const [tab, setTab] = useState<Tab>('pending');
 
-  // /pending is parent-scoped server-side — works for both Manager and HR.
-  const { data: list = [], isLoading } = useListPendingLeavesQuery();
+  // All three queries are declared but only the active one runs (skip flag).
+  const { data: pending = [], isLoading: pendingLoading } =
+    useListPendingLeavesQuery(undefined, { skip: tab !== 'pending' });
+  const { data: team = [], isLoading: teamLoading } = useListTeamLeavesQuery(
+    undefined,
+    { skip: tab !== 'all' || isHR }
+  );
+  const { data: all = [], isLoading: allLoading } = useListAllLeavesQuery(
+    undefined,
+    { skip: tab !== 'all' || !isHR }
+  );
+
+  const list: LeaveRequest[] =
+    tab === 'pending' ? pending : isHR ? all : team;
+  const isLoading = pendingLoading || teamLoading || allLoading;
 
   const [approve, { isLoading: approving }] = useApproveLeaveMutation();
   const [reject, { isLoading: rejecting }] = useRejectLeaveMutation();
@@ -74,41 +105,41 @@ export function LeaveApprovalPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center mt-12">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  const showStatus = tab === 'all';
+  const allTabLabel = isHR ? 'All organization' : 'All my team';
 
   return (
-    <div className="space-y-4">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Leave Approval
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Review pending requests and approve or reject with a remark.
-        </p>
-      </div>
+    <Page
+      title="Leave Approval"
+      description={
+        tab === 'pending'
+          ? 'Review pending requests and approve or reject with a remark.'
+          : isHR
+            ? 'All leave requests across the organization.'
+            : 'Full history of leave requests from your reportees.'
+      }
+    >
+      <Tabs value={tab} onValueChange={(v) => setTab(v as Tab)}>
+        <TabsList>
+          <TabsTrigger value="pending">Pending</TabsTrigger>
+          <TabsTrigger value="all">{allTabLabel}</TabsTrigger>
+        </TabsList>
+      </Tabs>
 
-      {list.length === 0 ? (
-        <Card>
-          <CardContent className="py-16">
-            <div className="flex flex-col items-center text-center">
-              <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <ClipboardCheck className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <p className="text-sm font-medium">All caught up</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                No pending requests to review.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+      {isLoading ? (
+        <Loading />
+      ) : list.length === 0 ? (
+        <EmptyState
+          icon={<ClipboardCheck className="h-5 w-5" />}
+          title={tab === 'pending' ? 'All caught up' : 'No leave requests'}
+          description={
+            tab === 'pending'
+              ? 'No pending requests to review.'
+              : 'Nothing to show here yet.'
+          }
+        />
       ) : (
-        <Card>
+        <Card className="overflow-hidden p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -118,13 +149,15 @@ export function LeaveApprovalPage() {
                 <TableHead>Start</TableHead>
                 <TableHead>End</TableHead>
                 <TableHead>Reason</TableHead>
+                {showStatus && <TableHead>Status</TableHead>}
+                {showStatus && <TableHead>Remark</TableHead>}
                 <TableHead className="text-right">Actions</TableHead>
               </TableRow>
             </TableHeader>
             <TableBody>
               {list.map((r) => (
                 <TableRow key={r.id}>
-                  <TableCell>
+                  <TableCell className="font-medium">
                     {r.requester?.username || `User ${r.userId}`}
                   </TableCell>
                   {isHR && (
@@ -147,23 +180,39 @@ export function LeaveApprovalPage() {
                   >
                     {r.reason}
                   </TableCell>
+                  {showStatus && (
+                    <TableCell>
+                      <Badge variant={statusVariant(r.status)}>
+                        {leaveStatusLabel(r.status)}
+                      </Badge>
+                    </TableCell>
+                  )}
+                  {showStatus && (
+                    <TableCell className="text-muted-foreground">
+                      {r.remark || '—'}
+                    </TableCell>
+                  )}
                   <TableCell className="text-right">
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => open(r, 'approve')}
-                      title="Approve"
-                    >
-                      <Check className="h-4 w-4 text-green-600" />
-                    </Button>
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => open(r, 'reject')}
-                      title="Reject"
-                    >
-                      <X className="h-4 w-4 text-red-600" />
-                    </Button>
+                    {r.status === LeaveStatus.Pending && (
+                      <>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => open(r, 'approve')}
+                          title="Approve"
+                        >
+                          <Check className="h-4 w-4 text-green-600" />
+                        </Button>
+                        <Button
+                          variant="ghost"
+                          size="icon"
+                          onClick={() => open(r, 'reject')}
+                          title="Reject"
+                        >
+                          <X className="h-4 w-4 text-red-600" />
+                        </Button>
+                      </>
+                    )}
                   </TableCell>
                 </TableRow>
               ))}
@@ -243,6 +292,6 @@ export function LeaveApprovalPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   );
 }

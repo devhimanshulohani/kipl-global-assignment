@@ -84,7 +84,7 @@ export function Layout() {
   const link = (item: NavItem) => (
     <NavLink
       to={item.to}
-      end={item.to === '/home'}
+      end
       className={({ isActive }) =>
         cn(
           'flex items-center gap-3 rounded-lg px-3 py-2 text-sm font-medium transition-colors',
@@ -109,15 +109,15 @@ export function Layout() {
           <div className="flex items-center gap-2 min-w-0">
             <Button
               variant="ghost"
-              size="icon"
+              size="icon-sm"
               className="md:hidden shrink-0"
               onClick={() => setSidebarOpen((o) => !o)}
               aria-label="Toggle menu"
             >
               {sidebarOpen ? (
-                <X className="h-5 w-5" />
+                <X className="h-4 w-4" />
               ) : (
-                <Menu className="h-5 w-5" />
+                <Menu className="h-4 w-4" />
               )}
             </Button>
             <h1 className="text-base font-semibold tracking-tight truncate">
@@ -194,7 +194,7 @@ export function Layout() {
 
       {/* Main */}
       <main className="pt-16 md:pl-64">
-        <div className="mx-auto max-w-7xl px-4 md:px-8 py-6">
+        <div className="mx-auto max-w-6xl px-4 md:px-6 py-5">
           <Outlet />
         </div>
       </main>

@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { Loader2, LogIn, LogOut } from 'lucide-react';
+import { LogIn, LogOut } from 'lucide-react';
 import {
   Card,
   CardContent,
@@ -16,6 +16,8 @@ import {
   useCheckOutMutation,
 } from '../store/attendance.api';
 import { formatDate, formatHours, formatTime } from '../lib/dates';
+import { Page } from '../components/Page';
+import { Loading } from '../components/Loading';
 
 export function AttendancePage() {
   const { data: today, isLoading } = useGetTodayQuery();
@@ -43,13 +45,7 @@ export function AttendancePage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center mt-12">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   const status = !today
     ? { label: 'Not checked in', variant: 'outline' as const }
@@ -58,69 +54,62 @@ export function AttendancePage() {
       : { label: 'Day complete', variant: 'secondary' as const };
 
   return (
-    <div className="space-y-6">
-      <div>
-        <h1 className="text-2xl font-semibold tracking-tight">
-          Check-in / Check-out
-        </h1>
-        <p className="text-sm text-muted-foreground mt-1">
-          Mark your attendance for today.
-        </p>
-      </div>
-      <Card className="max-w-xl">
-        <CardHeader>
-          <CardTitle>Today's status</CardTitle>
-          <CardDescription>
-            {formatDate(new Date().toISOString())}
-          </CardDescription>
-        </CardHeader>
-        <CardContent className="space-y-3">
-          {error && (
-            <Alert variant="destructive">
-              <AlertDescription>{error}</AlertDescription>
-            </Alert>
-          )}
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Check-in</span>
-            <span className="font-medium">{formatTime(today?.checkIn)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Check-out</span>
-            <span className="font-medium">{formatTime(today?.checkOut)}</span>
-          </div>
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Hours worked</span>
-            <span className="font-medium">
-              {formatHours(today?.hoursWorked)}
-            </span>
-          </div>
-          <div className="pt-1">
-            <Badge variant={status.variant}>{status.label}</Badge>
-          </div>
-        </CardContent>
-      </Card>
+    <Page
+      title="Check-in / Check-out"
+      description="Mark your attendance for today."
+    >
+      <div className="max-w-xl space-y-4">
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-base">Today</CardTitle>
+            <CardDescription>
+              {formatDate(new Date().toISOString())}
+            </CardDescription>
+          </CardHeader>
+          <CardContent className="space-y-2.5">
+            {error && (
+              <Alert variant="destructive">
+                <AlertDescription>{error}</AlertDescription>
+              </Alert>
+            )}
+            <Row label="Check-in" value={formatTime(today?.checkIn)} />
+            <Row label="Check-out" value={formatTime(today?.checkOut)} />
+            <Row label="Hours worked" value={formatHours(today?.hoursWorked)} />
+            <div className="pt-1">
+              <Badge variant={status.variant}>{status.label}</Badge>
+            </div>
+          </CardContent>
+        </Card>
 
-      <div className="flex gap-3 max-w-xl">
-        <Button
-          size="lg"
-          className="flex-1"
-          onClick={onCheckIn}
-          disabled={submitting || !!today}
-        >
-          <LogIn className="h-4 w-4 mr-2" />
-          Check In
-        </Button>
-        <Button
-          size="lg"
-          variant="secondary"
-          className="flex-1"
-          onClick={onCheckOut}
-          disabled={submitting || !today || !!today.checkOut}
-        >
-          <LogOut className="h-4 w-4 mr-2" />
-          Check Out
-        </Button>
+        <div className="flex gap-2">
+          <Button
+            className="flex-1"
+            onClick={onCheckIn}
+            disabled={submitting || !!today}
+          >
+            <LogIn className="h-4 w-4 mr-2" />
+            Check In
+          </Button>
+          <Button
+            variant="secondary"
+            className="flex-1"
+            onClick={onCheckOut}
+            disabled={submitting || !today || !!today.checkOut}
+          >
+            <LogOut className="h-4 w-4 mr-2" />
+            Check Out
+          </Button>
+        </div>
       </div>
+    </Page>
+  );
+}
+
+function Row({ label, value }: { label: string; value: string }) {
+  return (
+    <div className="flex justify-between text-sm">
+      <span className="text-muted-foreground">{label}</span>
+      <span className="font-medium">{value}</span>
     </div>
   );
 }

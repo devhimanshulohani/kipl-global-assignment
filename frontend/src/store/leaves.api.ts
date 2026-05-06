@@ -23,6 +23,10 @@ export const leavesApi = api.injectEndpoints({
       query: () => ({ url: '/api/leaves/pending' }),
       providesTags: ['LeaveRequest'],
     }),
+    listTeamLeaves: build.query<LeaveRequest[], void>({
+      query: () => ({ url: '/api/leaves/team' }),
+      providesTags: ['LeaveRequest'],
+    }),
     listAllLeaves: build.query<LeaveRequest[], void>({
       query: () => ({ url: '/api/leaves/all' }),
       providesTags: ['LeaveRequest'],
@@ -57,6 +61,7 @@ export const leavesApi = api.injectEndpoints({
 export const {
   useListMyLeavesQuery,
   useListPendingLeavesQuery,
+  useListTeamLeavesQuery,
   useListAllLeavesQuery,
   useApplyLeaveMutation,
   useApproveLeaveMutation,

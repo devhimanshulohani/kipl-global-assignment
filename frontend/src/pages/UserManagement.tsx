@@ -1,5 +1,13 @@
 import { useState } from 'react';
-import { Eye, EyeOff, Loader2, Pencil, Plus, UserX } from 'lucide-react';
+import {
+  Eye,
+  EyeOff,
+  Loader2,
+  Pencil,
+  Plus,
+  UserCheck,
+  UserX,
+} from 'lucide-react';
 import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
@@ -48,6 +56,8 @@ import {
 import type { UserRow } from '../store/users.api';
 import { runMutation } from '../lib/runMutation';
 import { useAuth } from '../auth/AuthContext';
+import { Page } from '../components/Page';
+import { Loading } from '../components/Loading';
 
 export function UserManagementPage() {
   const { user: currentUser } = useAuth();
@@ -86,20 +96,18 @@ export function UserManagementPage() {
   const [editParentId, setEditParentId] = useState<string>('');
   const [editActive, setEditActive] = useState(true);
 
-  const [deactivating, setDeactivating] = useState<UserRow | null>(null);
+  const [statusToggle, setStatusToggle] = useState<UserRow | null>(null);
 
-  const onDeactivate = async () => {
-    if (!deactivating) return;
+  const onToggleStatus = async () => {
+    if (!statusToggle) return;
+    const next = !statusToggle.isActive;
     if (
-      await runMutation(
-        updateUser({ id: deactivating.id, isActive: false }),
-        {
-          success: `${deactivating.username} deactivated`,
-          error: 'Deactivate failed',
-        }
-      )
+      await runMutation(updateUser({ id: statusToggle.id, isActive: next }), {
+        success: `${statusToggle.username} ${next ? 'activated' : 'deactivated'}`,
+        error: `${next ? 'Activate' : 'Deactivate'} failed`,
+      })
     ) {
-      setDeactivating(null);
+      setStatusToggle(null);
     }
   };
 
@@ -184,38 +192,26 @@ export function UserManagementPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center mt-12">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-start gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            User Management
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Create users, assign roles and reporting managers, deactivate accounts.
-          </p>
-        </div>
+    <Page
+      title="User Management"
+      description="Create users, assign roles and reporting managers, deactivate accounts."
+      action={
         <Button onClick={openCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Add User
         </Button>
-      </div>
-
+      }
+    >
       {!!error && (
         <Alert variant="destructive">
           <AlertDescription>Failed to load users</AlertDescription>
         </Alert>
       )}
 
-      <Card>
+      <Card className="overflow-hidden p-0">
         <Table>
           <TableHeader>
             <TableRow>
@@ -230,8 +226,10 @@ export function UserManagementPage() {
           <TableBody>
             {users.map((u) => (
               <TableRow key={u.id}>
-                <TableCell>{u.id}</TableCell>
-                <TableCell>{u.username}</TableCell>
+                <TableCell className="text-muted-foreground tabular-nums">
+                  {u.id}
+                </TableCell>
+                <TableCell className="font-medium">{u.username}</TableCell>
                 <TableCell>
                   <Badge variant="secondary">
                     {userRoleLabel(u.role.name)}
@@ -255,16 +253,18 @@ export function UserManagementPage() {
                   >
                     <Pencil className="h-4 w-4" />
                   </Button>
-                  {u.isActive && (
-                    <Button
-                      variant="ghost"
-                      size="icon"
-                      onClick={() => setDeactivating(u)}
-                      title="Deactivate"
-                    >
+                  <Button
+                    variant="ghost"
+                    size="icon"
+                    onClick={() => setStatusToggle(u)}
+                    title={u.isActive ? 'Deactivate' : 'Activate'}
+                  >
+                    {u.isActive ? (
                       <UserX className="h-4 w-4 text-destructive" />
-                    </Button>
-                  )}
+                    ) : (
+                      <UserCheck className="h-4 w-4 text-emerald-600" />
+                    )}
+                  </Button>
                 </TableCell>
               </TableRow>
             ))}
@@ -473,39 +473,47 @@ export function UserManagementPage() {
       </Dialog>
 
       <AlertDialog
-        open={!!deactivating}
+        open={!!statusToggle}
         onOpenChange={(o) => {
-          if (!o) setDeactivating(null);
+          if (!o) setStatusToggle(null);
         }}
       >
         <AlertDialogContent>
           <AlertDialogHeader>
             <AlertDialogTitle>
-              Deactivate {deactivating?.username}?
+              {statusToggle?.isActive ? 'Deactivate' : 'Activate'}{' '}
+              {statusToggle?.username}?
             </AlertDialogTitle>
             <AlertDialogDescription>
-              They won't be able to log in. You can reactivate them later
-              from the Edit dialog.
+              {statusToggle?.isActive
+                ? "They won't be able to log in. You can reactivate them anytime."
+                : 'They will be able to log in again.'}
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
-            <AlertDialogCancel onClick={() => setDeactivating(null)}>
+            <AlertDialogCancel onClick={() => setStatusToggle(null)}>
               Cancel
             </AlertDialogCancel>
             <AlertDialogAction
-              onClick={onDeactivate}
+              onClick={onToggleStatus}
               disabled={submitting}
-              className="bg-destructive text-destructive-foreground hover:bg-destructive/90"
+              className={
+                statusToggle?.isActive
+                  ? 'bg-destructive text-destructive-foreground hover:bg-destructive/90'
+                  : ''
+              }
             >
               {submitting ? (
                 <Loader2 className="h-4 w-4 animate-spin" />
-              ) : (
+              ) : statusToggle?.isActive ? (
                 'Deactivate'
+              ) : (
+                'Activate'
               )}
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   );
 }

@@ -25,6 +25,11 @@ router.get(
   leavesController.listPending
 );
 router.get(
+  '/team',
+  requirePermission(PERMISSIONS.LEAVE_READ_PENDING),
+  leavesController.listTeam
+);
+router.get(
   '/all',
   requirePermission(PERMISSIONS.LEAVE_READ_ALL),
   leavesController.listAll

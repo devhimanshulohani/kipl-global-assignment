@@ -88,6 +88,23 @@ export const listPending = async (actorId: number) => {
   });
 };
 
+// Same parent-scope as listPending but any status — Manager's history view.
+export const listTeam = async (actorId: number) => {
+  return LeaveRequest.findAll({
+    include: [
+      {
+        model: User,
+        as: 'requester',
+        where: { parentId: actorId },
+        attributes: ['id', 'username'],
+        include: [{ model: Role, as: 'role', attributes: ['name'] }],
+      },
+      { model: LeaveType, as: 'leaveType' },
+    ],
+    order: [['createdAt', 'DESC']],
+  });
+};
+
 export const listAll = async () => {
   return LeaveRequest.findAll({
     include: [

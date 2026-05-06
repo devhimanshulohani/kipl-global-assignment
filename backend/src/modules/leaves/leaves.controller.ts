@@ -15,6 +15,10 @@ export const listPending = async (req: Request, res: Response) => {
   res.json(await leavesService.listPending(req.user!.id));
 };
 
+export const listTeam = async (req: Request, res: Response) => {
+  res.json(await leavesService.listTeam(req.user!.id));
+};
+
 export const listAll = async (_req: Request, res: Response) => {
   res.json(await leavesService.listAll());
 };

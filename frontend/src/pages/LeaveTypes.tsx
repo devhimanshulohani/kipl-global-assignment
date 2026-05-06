@@ -1,10 +1,13 @@
 import { useState } from 'react';
 import { Loader2, Pencil, Plus, Tags, Trash2 } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/card';
+import { Card } from '@/components/ui/card';
 import { Button } from '@/components/ui/button';
 import { Input } from '@/components/ui/input';
 import { Label } from '@/components/ui/label';
 import { Alert, AlertDescription } from '@/components/ui/alert';
+import { Page } from '../components/Page';
+import { Loading } from '../components/Loading';
+import { EmptyState } from '../components/EmptyState';
 import {
   Table,
   TableBody,
@@ -97,31 +100,19 @@ export function LeaveTypesPage() {
     }
   };
 
-  if (isLoading) {
-    return (
-      <div className="flex justify-center mt-12">
-        <Loader2 className="h-6 w-6 animate-spin text-muted-foreground" />
-      </div>
-    );
-  }
+  if (isLoading) return <Loading />;
 
   return (
-    <div className="space-y-4">
-      <div className="flex justify-between items-start gap-3">
-        <div>
-          <h1 className="text-2xl font-semibold tracking-tight">
-            Leave Configuration
-          </h1>
-          <p className="text-sm text-muted-foreground mt-1">
-            Define leave types available to all employees.
-          </p>
-        </div>
+    <Page
+      title="Leave Configuration"
+      description="Define leave types available to all employees."
+      action={
         <Button onClick={openCreate}>
           <Plus className="h-4 w-4 mr-2" />
           Add Leave Type
         </Button>
-      </div>
-
+      }
+    >
       {!!error && (
         <Alert variant="destructive">
           <AlertDescription>Failed to load leave types</AlertDescription>
@@ -129,21 +120,13 @@ export function LeaveTypesPage() {
       )}
 
       {list.length === 0 ? (
-        <Card>
-          <CardContent className="py-16">
-            <div className="flex flex-col items-center text-center">
-              <div className="h-12 w-12 rounded-full bg-muted flex items-center justify-center mb-3">
-                <Tags className="h-5 w-5 text-muted-foreground" />
-              </div>
-              <p className="text-sm font-medium">No leave types yet</p>
-              <p className="text-xs text-muted-foreground mt-1">
-                Click "Add Leave Type" to create one.
-              </p>
-            </div>
-          </CardContent>
-        </Card>
+        <EmptyState
+          icon={<Tags className="h-5 w-5" />}
+          title="No leave types yet"
+          description='Click "Add Leave Type" to create one.'
+        />
       ) : (
-        <Card>
+        <Card className="overflow-hidden p-0">
           <Table>
             <TableHeader>
               <TableRow>
@@ -157,8 +140,8 @@ export function LeaveTypesPage() {
             <TableBody>
               {list.map((t) => (
                 <TableRow key={t.id}>
-                  <TableCell>{t.name}</TableCell>
-                  <TableCell className="text-right">
+                  <TableCell className="font-medium">{t.name}</TableCell>
+                  <TableCell className="text-right tabular-nums">
                     {t.annualQuota}
                   </TableCell>
                   <TableCell className="text-right">
@@ -274,6 +257,6 @@ export function LeaveTypesPage() {
           </AlertDialogFooter>
         </AlertDialogContent>
       </AlertDialog>
-    </div>
+    </Page>
   );
 }

@@ -363,12 +363,15 @@ INSERT INTO public."SequelizeMeta" VALUES ('20260504000005-create-sessions.js');
 -- Data for Name: attendance; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
+INSERT INTO public.attendance VALUES (1, 3, '2026-05-06', '2026-05-06 05:22:21.716+00', '2026-05-06 05:22:28.045+00', '2026-05-06 05:22:21.717+00', '2026-05-06 05:22:28.045+00');
+INSERT INTO public.attendance VALUES (2, 2, '2026-05-06', '2026-05-06 05:54:42.53+00', NULL, '2026-05-06 05:54:42.53+00', '2026-05-06 05:54:42.53+00');
 
 
 --
 -- Data for Name: leave_requests; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
+INSERT INTO public.leave_requests VALUES (2, 3, 1, '2026-05-06', '2026-05-07', 'TEST', 'approved', 'Approved', 2, '2026-05-06 06:14:01.913+00', '2026-05-06 06:12:26.483+00', '2026-05-06 06:14:01.913+00');
 
 
 --
@@ -439,12 +442,21 @@ INSERT INTO public.roles VALUES (3, 'hr', '2026-05-05 11:08:45.598+00', '2026-05
 -- Data for Name: sessions; Type: TABLE DATA; Schema: public; Owner: app_user
 --
 
+INSERT INTO public.sessions VALUES ('91497619-5c81-4dc6-914c-0d511cd49d49', 3, '2026-05-06 05:23:44.829+00', '2026-05-06 05:22:04.305+00', '2026-05-06 05:23:44.829+00');
 INSERT INTO public.sessions VALUES ('0cb4a55c-1d4d-46db-b9ce-16389e731e3f', 1, '2026-05-05 11:10:29.143+00', '2026-05-05 11:10:29.113+00', '2026-05-05 11:10:29.143+00');
+INSERT INTO public.sessions VALUES ('1138f3bd-4934-4696-ad4f-0c25e1161a06', 2, '2026-05-06 06:14:52.642+00', '2026-05-06 06:13:30.283+00', '2026-05-06 06:14:52.643+00');
+INSERT INTO public.sessions VALUES ('8dfc29e0-b077-4be2-89fd-b665c601fc70', 3, '2026-05-06 06:29:39.059+00', '2026-05-06 06:29:38.87+00', '2026-05-06 06:29:39.059+00');
+INSERT INTO public.sessions VALUES ('d7717f27-dc16-4797-b3ca-a9ad7fef2d51', 2, '2026-05-06 06:29:39.079+00', '2026-05-06 06:29:38.96+00', '2026-05-06 06:29:39.079+00');
+INSERT INTO public.sessions VALUES ('0d2b27de-fbba-4e35-8834-ef0c50d672d4', 3, '2026-05-06 05:54:42.067+00', '2026-05-06 05:54:41.733+00', '2026-05-06 05:54:42.067+00');
+INSERT INTO public.sessions VALUES ('3409bec0-e580-4be2-af05-7a7ca5d41402', 1, '2026-05-06 06:29:39.109+00', '2026-05-06 06:29:39.04+00', '2026-05-06 06:29:39.109+00');
 INSERT INTO public.sessions VALUES ('c0fc36a5-7b88-4099-b634-4ee86f351796', 1, '2026-05-05 11:15:30.194+00', '2026-05-05 11:08:56.718+00', '2026-05-05 11:15:30.194+00');
 INSERT INTO public.sessions VALUES ('ed28362e-a7d1-40f3-935b-cb6bee18b0cd', 1, '2026-05-05 11:19:36.987+00', '2026-05-05 11:19:25.708+00', '2026-05-05 11:19:36.987+00');
 INSERT INTO public.sessions VALUES ('3a500cc4-0079-4c69-8bd0-5a6462534e17', 1, '2026-05-05 11:26:53.725+00', '2026-05-05 11:25:48.753+00', '2026-05-05 11:26:53.725+00');
+INSERT INTO public.sessions VALUES ('6d7ef909-d2d8-4c35-993b-1a27dcaf10c2', 1, '2026-05-06 06:33:23.884+00', '2026-05-06 06:30:06.425+00', '2026-05-06 06:33:23.884+00');
 INSERT INTO public.sessions VALUES ('6541d924-61a1-46ba-81a0-2e5079a63410', 1, '2026-05-05 11:42:39.468+00', '2026-05-05 11:40:21.223+00', '2026-05-05 11:42:39.468+00');
-INSERT INTO public.sessions VALUES ('200e3be8-ecfb-469b-8cf3-f24d8cb61c34', 1, '2026-05-05 11:46:02.23+00', '2026-05-05 11:45:32.983+00', '2026-05-05 11:46:02.231+00');
+INSERT INTO public.sessions VALUES ('fadef259-c3d0-496b-a0b0-55d6a1a1e840', 2, '2026-05-06 05:54:42.549+00', '2026-05-06 05:54:41.823+00', '2026-05-06 05:54:42.549+00');
+INSERT INTO public.sessions VALUES ('119456d2-8df1-4d17-9d79-e003f2f2f43a', 1, '2026-05-06 05:54:42.622+00', '2026-05-06 05:54:41.901+00', '2026-05-06 05:54:42.622+00');
+INSERT INTO public.sessions VALUES ('200e3be8-ecfb-469b-8cf3-f24d8cb61c34', 1, '2026-05-05 11:48:36.985+00', '2026-05-05 11:45:32.983+00', '2026-05-05 11:48:36.985+00');
 
 
 --
@@ -452,23 +464,23 @@ INSERT INTO public.sessions VALUES ('200e3be8-ecfb-469b-8cf3-f24d8cb61c34', 1, '
 --
 
 INSERT INTO public.users VALUES (1, 'hr1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 3, NULL, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
-INSERT INTO public.users VALUES (2, 'manager1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 2, 1, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
 INSERT INTO public.users VALUES (3, 'employee1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 1, 2, true, '2026-05-05 11:08:45.619+00', '2026-05-05 11:08:45.619+00');
 INSERT INTO public.users VALUES (7, 'Test', '$2b$10$gMLY/f2e1jFU/cs36sLRoe.bA5jh3XA4mdfLQmbPNx9PDzbMSatJK', 1, 2, true, '2026-05-05 11:46:02.217+00', '2026-05-05 11:46:02.217+00');
+INSERT INTO public.users VALUES (2, 'manager1', '$2b$10$7XF.vnNAVNF82/brBDQFDeHJwjgojTyRcGaJsp/2IxUzL2HGJbPjm', 2, 1, true, '2026-05-05 11:08:45.619+00', '2026-05-06 06:33:23.861+00');
 
 
 --
 -- Name: attendance_id_seq; Type: SEQUENCE SET; Schema: public; Owner: app_user
 --
 
-SELECT pg_catalog.setval('public.attendance_id_seq', 1, false);
+SELECT pg_catalog.setval('public.attendance_id_seq', 2, true);
 
 
 --
 -- Name: leave_requests_id_seq; Type: SEQUENCE SET; Schema: public; Owner: app_user
 --
 
-SELECT pg_catalog.setval('public.leave_requests_id_seq', 1, false);
+SELECT pg_catalog.setval('public.leave_requests_id_seq', 2, true);
 
 
 --
